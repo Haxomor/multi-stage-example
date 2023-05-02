@@ -18,10 +18,13 @@ pipeline {
                 script {
                     // Split the version number into an array
                     def versionArray = env.VERSION_NUMBER.split('\\.')
-                    
+                    echo $versionArray
                     // Increment the patch version number
                     def patchVersion = versionArray[2].toInteger() + 1
+                    echo $patchVersion
+                    
                     versionArray[2] = patchVersion.toString()
+                    echo $versionArray
                     
                     // Join the version number array back into a string
                     env.VERSION_NUMBER = versionArray.join('.')
