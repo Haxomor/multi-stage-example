@@ -30,23 +30,5 @@ pipeline {
                 }
             }
         }
-    }
-    
-    post {
-        success {
-            // If the build was successful, commit the new version number to the repository
-            script {
-                sh "git config --global user.email 'jenkins@mycompany.com'"
-                sh "git config --global user.name 'Jenkins'"
-                sh "git commit -am 'Bump version number to ${env.VERSION_NUMBER}'"
-                sh "git push origin HEAD:${env.BRANCH_NAME}"
-            }
-        }
-        failure {
-            // If the build failed, revert the version number change
-            script {
-                sh "git checkout ."
-            }
-        }
-    }
+    } 
 }
