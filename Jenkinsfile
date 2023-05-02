@@ -2,41 +2,28 @@ pipeline {
     agent any
     
     environment {
-        // Initialize the version number
-        VERSION_NUMBER = "1.0.0"
+        // Set the initial version number to 1.0.0
+        VERSION_NUMBER = '1.0.0'
     }
     
     stages {
         stage('Build') {
             steps {
                 // Build your code here
-            }
-        }
-        
-        stage('Increment Version Number') {
-            when {
-                // Only run this stage if there is a change in the code
-                changeset ".*"
-            }
-            
-            steps {
-                // Split the version number into an array of parts
-                def parts = VERSION_NUMBER.split('.')
                 
-                // Increment the last part of the version number
-                parts[2] = (parts[2] as int) + 1
-                
-                // Join the parts back into a single string
-                VERSION_NUMBER = parts.join('.')
-                
-                // Print the new version number
-                echo "New version number: ${VERSION_NUMBER}"
-            }
-        }
-        
-        stage('Deploy') {
-            steps {
-                // Deploy your code here
+                // If the build is successful, bump the version number
+                script {
+                    // Split the version number into an array
+                    def versionArray = env.VERSION_NUMBER.split('\\.')
+                    
+                    // Increment the patch version number
+                    versionArray[2] = (versionArray[2] as Integer) + 1
+                    
+                    // Join the version number array back into a string
+                    env.VERSION_NUMBER = versionArray.join('.')
+                    
+                    echo "New version number is ${env.VERSION_NUMBER}"
+                }
             }
         }
     }
