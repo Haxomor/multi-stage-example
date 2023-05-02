@@ -9,6 +9,9 @@ pipeline {
     stages {
         stage('Build') {
             steps {
+                // Checkout the code from the repository
+                checkout scm
+                
                 // Build your code here
                 
                 // If the build is successful, bump the version number
@@ -17,13 +20,32 @@ pipeline {
                     def versionArray = env.VERSION_NUMBER.split('\\.')
                     
                     // Increment the patch version number
-                    versionArray[2] = (versionArray[2] as Integer) + 1
+                    def patchVersion = versionArray[2].toInteger() + 1
+                    versionArray[2] = patchVersion.toString()
                     
                     // Join the version number array back into a string
                     env.VERSION_NUMBER = versionArray.join('.')
                     
                     echo "New version number is ${env.VERSION_NUMBER}"
                 }
+            }
+        }
+    }
+    
+    post {
+        success {
+            // If the build was successful, commit the new version number to the repository
+            script {
+                sh "git config --global user.email 'jenkins@mycompany.com'"
+                sh "git config --global user.name 'Jenkins'"
+                sh "git commit -am 'Bump version number to ${env.VERSION_NUMBER}'"
+                sh "git push origin HEAD:${env.BRANCH_NAME}"
+            }
+        }
+        failure {
+            // If the build failed, revert the version number change
+            script {
+                sh "git checkout ."
             }
         }
     }
