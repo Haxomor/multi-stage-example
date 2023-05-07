@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        VERSION_NUMBER = '1'
+        VERSION_NUMBER = '1.0.0'
     }
     stages {
         stage('Build') {
@@ -15,7 +15,18 @@ pipeline {
         always {
             script {
                 if (currentBuild.result == 'SUCCESS') {
-                    VERSION_NUMBER = VERSION_NUMBER.toInteger() + 1
+                    def parts = VERSION_NUMBER.split('.')
+                
+                    // Increment the last part of the version number
+                    parts[2] = (parts[2] as int) + 1
+                
+                    // Join the parts back into a single string
+                    VERSION_NUMBER = parts.join('.')
+                
+                    // Print the new version number
+                    echo "New version number: ${VERSION_NUMBER}"
+            }
+        }
                 }
                 echo "New version number is ${VERSION_NUMBER}"
             }
