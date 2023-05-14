@@ -25,9 +25,9 @@ pipeline {
                 
                     // Print the new version number
                     echo "New version number: ${VERSION_NUMBER}"
-            }
-        }
+                    }
                 }
-                echo "New version number is ${VERSION_NUMBER}"
             }
+                echo "New version number is ${VERSION_NUMBER}"
         }
+    }
