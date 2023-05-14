@@ -1,58 +1,77 @@
-enum PatchLevel {
-    MAJOR, MINOR, PATCH
-}
-
 class SemVer implements Serializable {
 
-    private int major, minor, patch
+    enum PatchLevel {
+        MAJOR, MINOR, PATCH
+    }
+
+    private int[] components
+    private String suffix = ''
 
     SemVer(String version) {
-        def versionParts = version.tokenize('.')
-        println versionParts
-        if (versionParts.size != 3) {
-            throw new IllegalArgumentException("Wrong version format - expected MAJOR.MINOR.PATCH - got ${version}")
+        if (version.contains('-')) {
+            suffix = version.substring(version.indexOf('-'))
+            version = version - suffix
         }
-        this.major = versionParts[0].toInteger()
-        this.minor = versionParts[1].toInteger()
-        this.patch = versionParts[2].toInteger()
+
+        components = version.tokenize('.').collect{it.toInteger()}
     }
 
     SemVer(int major, int minor, int patch) {
-        this.major = major
-        this.minor = minor
-        this.patch = patch
+        this.components = [major, minor, patch]
+    }
+
+
+    SemVer bump(int componentIndex) {
+        // from the end or front?
+        def index = (componentIndex < 0) ? components.size() + componentIndex : componentIndex
+        if (components.size() <= index) {
+            throw new IllegalArgumentException("Can't bump index ${componentIndex} of version ${toString()} because we don't have enough components")
+        }
+
+        components[index]++
+
+        // reset all following digits to 0
+        for (int i = index + 1 ; i < components.size() ; i++) {
+            components[i] = 0
+        }
+        return this
     }
 
     SemVer bump(PatchLevel patchLevel) {
-        switch (patchLevel) {
-            case PatchLevel.MAJOR:
-                return new SemVer(major + 1, 0, 0)
-                break
-            case PatchLevel.MINOR:
-                return new SemVer(major, minor + 1, 0)
-                break
-            case PatchLevel.PATCH:
-                return new SemVer(major, minor, patch + 1)
-                break
+        // convert to index
+        bump(PatchLevel.findIndexOf {it == patchLevel})
+    }
+
+    /**
+     * One-line convenience static method.
+     * @param version - a string version with optional -suffix.
+     * @param patchLevel - which version component to increment. 
+     *      One of: 
+     *          * string name for the enum constant,
+     *          * relative array index (eg -1 or "-1" for last component)
+     * @return string version after bumping:
+     */
+    static String bump(String version, def patchLevel = -1) {
+        def semVer = new SemVer(version)
+        PatchLevel level
+        if (!PatchLevel.any{it.name() == patchLevel}) {
+            // Not a valid enum element name,
+            // this must be an integer index in the provided version.
+            semVer.bump(patchLevel.toInteger()).toString()
+        } else {
+            semVer.bump(PatchLevel.valueOf(patchLevel)).toString()
         }
-        return new SemVer()
+    }
+
+    /**
+     * @return the number of version numeric components
+     */
+    int size() {
+        return components.size()
     }
 
     String toString() {
-        return "${major}.${minor}.${patch}"
+        return "${components.join('.')}${suffix}"
     }
 
 }
-
-def version = new SemVer("0.0.1")
-println(version.bump(PatchLevel.MAJOR).toString())
-println(version.bump(PatchLevel.MINOR).toString())
-println(version.bump(PatchLevel.PATCH).toString())
-
-/*
-  will output
-  
-  1.0.0
-  0.1.0
-  0.0.2
-*/
