@@ -1,17 +1,37 @@
-def nextVersionFromGit(scope) {
-    def latestVersion = sh(returnStdout: true, script: 'git describe --tags --abbrev=0 --match *.*.* 2> /dev/null || echo 0.0.0').trim()
-    def (major, minor, patch) = latestVersion.tokenize('.').collect { it.toInteger() }
-    def nextVersion
-    switch (scope) {
-        case 'major':
-            nextVersion = "${major + 1}.0.0"
-            break
-        case 'minor':
-            nextVersion = "${major}.${minor + 1}.0"
-            break
-        case 'patch':
-            nextVersion = "${major}.${minor}.${patch + 1}"
-            break
+pipeline {
+    agent any
+    environment {
+        VERSION_NUMBER = '1'
     }
-    nextVersion
+    stages {
+        stage('Build') {
+            steps { 
+                echo "Builder"
+                // Build your code here
+            }
+        }
+    }
+    post {
+        always {
+            script {
+                def bumpVersion() {
+    def version = System.getenv('VERSION')
+    if (version) {
+        def parts = version.split('\\.')
+        if (parts.size() > 0) {
+            def lastPart = parts[-1].toInteger()
+            lastPart++
+            parts[-1] = lastPart.toString()
+            def bumpedVersion = parts.join('.')
+            println "Bumped version: $bumpedVersion"
+            // Update the environment variable
+            System.setEnv('VERSION', bumpedVersion)
+        }
+    } else {
+        println "Version environment variable not found."
+    }
+}
+            }
+        }
+    }
 }
