@@ -16,7 +16,7 @@ pipeline {
             script {
                 def version = System.getenv('VERSION_NUMBER')
                 if (version) {
-                    def parts = version.split('\\.')
+                    def parts = version.split('.')
                     if (parts.size() > 0) {
                         def lastPart = parts[-1].toInteger()
                         lastPart++
