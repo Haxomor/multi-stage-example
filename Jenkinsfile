@@ -28,6 +28,5 @@ pipeline {
                     }
                 }
             }
-                echo "New version number is ${VERSION_NUMBER}"
         }
     }
