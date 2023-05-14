@@ -1,32 +1,58 @@
-pipeline {
-    agent any
-    environment {
-        VERSION_NUMBER = '1.0.0'
-    }
-    stages {
-        stage('Build') {
-            steps { 
-                echo "Builder"
-                // Build your code here
-            }
+enum PatchLevel {
+    MAJOR, MINOR, PATCH
+}
+
+class SemVer implements Serializable {
+
+    private int major, minor, patch
+
+    SemVer(String version) {
+        def versionParts = version.tokenize('.')
+        println versionParts
+        if (versionParts.size != 3) {
+            throw new IllegalArgumentException("Wrong version format - expected MAJOR.MINOR.PATCH - got ${version}")
         }
+        this.major = versionParts[0].toInteger()
+        this.minor = versionParts[1].toInteger()
+        this.patch = versionParts[2].toInteger()
     }
-    post {
-        always {
-            script {
-                if (currentBuild.result == 'SUCCESS') {
-                    def parts = VERSION_NUMBER.split('.')
-                
-                    // Increment the last part of the version number
-                    parts[2] = (parts[2] as int) + 1
-                
-                    // Join the parts back into a single string
-                    VERSION_NUMBER = parts.join('.')
-                
-                    // Print the new version number
-                    echo "New version number: ${VERSION_NUMBER}"
-                    }
-                }
-            }
+
+    SemVer(int major, int minor, int patch) {
+        this.major = major
+        this.minor = minor
+        this.patch = patch
+    }
+
+    SemVer bump(PatchLevel patchLevel) {
+        switch (patchLevel) {
+            case PatchLevel.MAJOR:
+                return new SemVer(major + 1, 0, 0)
+                break
+            case PatchLevel.MINOR:
+                return new SemVer(major, minor + 1, 0)
+                break
+            case PatchLevel.PATCH:
+                return new SemVer(major, minor, patch + 1)
+                break
         }
+        return new SemVer()
     }
+
+    String toString() {
+        return "${major}.${minor}.${patch}"
+    }
+
+}
+
+def version = new SemVer("0.0.1")
+println(version.bump(PatchLevel.MAJOR).toString())
+println(version.bump(PatchLevel.MINOR).toString())
+println(version.bump(PatchLevel.PATCH).toString())
+
+/*
+  will output
+  
+  1.0.0
+  0.1.0
+  0.0.2
+*/
