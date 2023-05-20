@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                     sh 'apt update'
-                    sh 'sudo apt install docker-ce -y'
+                    sh 'apt install docker-ce -y'
                     sh 'usermod -aG docker jenkins'
                     sh 'systemctl restart jenkins'
                     sh 'service jenkins restart'
