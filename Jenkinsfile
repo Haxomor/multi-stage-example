@@ -28,7 +28,7 @@ pipeline {
                     apt update
                     apt install docker.io -y
                     usermod -aG docker jenkins
-                    docker build  -t "Dockerfile:latest" .
+                    docker build  -t "Dockerfile:1.0.0" .
                     docker images
                     '''
                 }
