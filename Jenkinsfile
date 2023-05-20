@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                     sh 'docker build  -t "denis:1.0.0"'
-                    'docker images'
+                    sh 'docker images'
                 }
             }
         }
