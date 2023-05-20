@@ -18,7 +18,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh 'whoiam'
+                    sh 'whoami'
                     sh 'pwd'
                     sh 'cd ..'
                     sh 'pwd'
