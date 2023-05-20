@@ -18,6 +18,8 @@ pipeline {
         stage('Build') {
             steps {
                 script {
+                    sh 'sudo apt update'
+                    sh 'sudo apt install docker-ce docker-ce-cli containerd.io -y'
                     sh 'usermod -aG docker jenkins'
                     sh 'systemctl restart jenkins'
                     sh 'service jenkins restart'
