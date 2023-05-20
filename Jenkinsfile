@@ -21,7 +21,6 @@ pipeline {
                     sh 'apt update'
                     sh 'apt install docker.io -y'
                     sh 'usermod -aG docker jenkins'
-                    sh 'systemctl restart jenkins'
                     sh 'docker build  -t "denis:1.0.0"'
                     sh 'docker images'
                 }
