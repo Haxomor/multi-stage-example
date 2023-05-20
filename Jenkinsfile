@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                     sh 'apt update'
-                    sh 'apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y'
+                    sh 'sudo apt install docker-ce -y'
                     sh 'usermod -aG docker jenkins'
                     sh 'systemctl restart jenkins'
                     sh 'service jenkins restart'
