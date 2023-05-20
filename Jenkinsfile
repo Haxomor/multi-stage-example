@@ -1,7 +1,7 @@
 pipeline {
     agent any
 
-    options {
+    options {OM openjdk:8-jdk-alpine as build
         skipDefaultCheckout() // Skip default checkout to have full control over environment variables
     }
 
@@ -18,8 +18,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Perform build steps here
-                    echo "builded"
+                    docker build  -t denis:1.0.0
                 }
             }
         }
