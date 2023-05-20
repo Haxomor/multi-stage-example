@@ -22,6 +22,7 @@ pipeline {
                     whoami
                     pwd
                     cd ..
+                    ls
                     pwd
                     apt update
                     apt install docker.io -y
