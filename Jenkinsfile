@@ -18,6 +18,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
+                    checkout scm
                     sh '''
                     pwd
                     ls
