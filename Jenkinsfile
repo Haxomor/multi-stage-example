@@ -20,12 +20,6 @@ pipeline {
                 script {
                     checkout scm
                     sh '''
-                    pwd
-                    ls
-                    cd ..
-                    pwd
-                    ls
-                    pwd
                     apt update
                     apt install docker.io -y
                     usermod -aG docker jenkins
