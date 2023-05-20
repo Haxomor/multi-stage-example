@@ -25,6 +25,7 @@ pipeline {
                     usermod -aG docker jenkins
                     docker build  -t "denis:1.0.0" .
                     docker images
+                    docker ran -d denis
                     '''
                 }
             }
