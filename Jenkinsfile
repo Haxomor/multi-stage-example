@@ -19,9 +19,10 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    whoami
                     pwd
+                    ls
                     cd ..
+                    pwd
                     ls
                     pwd
                     apt update
