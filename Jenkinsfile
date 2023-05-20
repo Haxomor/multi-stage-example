@@ -18,8 +18,8 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh 'docker build  -t "denis:1.0.0"'
-                    sh 'docker images'
+                    sh 'sudo docker build  -t "denis:1.0.0"'
+                    sh 'sudo docker images'
                 }
             }
         }
