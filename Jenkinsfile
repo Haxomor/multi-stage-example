@@ -18,9 +18,9 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh 'sudo usermod -aG docker jenkins'
-                    sh 'sudo systemctl restart jenkins'
-                    sh 'sudo service jenkins restart'
+                    sh 'usermod -aG docker jenkins'
+                    sh 'systemctl restart jenkins'
+                    sh 'service jenkins restart'
                     sh 'docker build  -t "denis:1.0.0"'
                     sh 'docker images'
                 }
