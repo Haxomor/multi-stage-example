@@ -1,7 +1,7 @@
 pipeline {
     agent any
 
-    options {OM openjdk:8-jdk-alpine as build
+    options {
         skipDefaultCheckout() // Skip default checkout to have full control over environment variables
     }
 
