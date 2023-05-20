@@ -18,15 +18,17 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh 'whoami'
-                    sh 'pwd'
-                    sh 'cd ..'
-                    sh 'pwd'
-                    sh 'apt update'
-                    sh 'apt install docker.io -y'
-                    sh 'usermod -aG docker jenkins'
-                    sh 'docker build  -t "denis:1.0.0" .'
-                    sh 'docker images'
+                    sh '''
+                    whoami
+                    pwd
+                    cd ..
+                    pwd
+                    apt update
+                    apt install docker.io -y
+                    usermod -aG docker jenkins
+                    docker build  -t "denis:1.0.0" .
+                    docker images
+                    '''
                 }
             }
         }
