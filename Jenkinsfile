@@ -18,7 +18,9 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh 'ls -al'
+                    sh 'ls -a'
+                    sh 'cd ..'
+                    sh 'ls -a'
                     sh 'apt update'
                     sh 'apt install docker.io -y'
                     sh 'usermod -aG docker jenkins'
