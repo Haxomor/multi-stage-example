@@ -28,7 +28,7 @@ pipeline {
                     apt update
                     apt install docker.io -y
                     usermod -aG docker jenkins
-                    docker build  -t "denis:1.0.0" .
+                    docker build  -t "denis:latest" .
                     docker images
                     '''
                 }
